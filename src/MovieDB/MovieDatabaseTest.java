@@ -86,12 +86,38 @@ class MovieDatabaseTest {
 
 	@Test
 	void testGetBestActor() {
-		fail("Not yet implemented"); // TODO
+		String[] actors = new String[] {"andy", "tim", "john"};
+		String[] actors2 = new String[] {"andy", "tim", "jill"};
+		String[] actors3 = new String[] {"highguy"};
+		
+		db.addMovie("movie1", actors);
+		
+		db.addMovie("movie2", actors2);
+		
+		db.addMovie("movie3", actors3);
+		
+		db.addRating("movie1", 2.2);
+		
+		db.addRating("movie2", 9.9);
+		db.addRating("movie3", 10.0);
+		
+		assertEquals(db.getBestActor(), "highguy");
 	}
 
 	@Test
 	void testGetBestMovie() {
-		fail("Not yet implemented"); // TODO
+		String[] actors = new String[] {"aa", "bb"};
+		
+		db.addMovie("rateMovie", actors);
+		
+		db.addRating("rateMovie", 5.5);
+		
+		db.addMovie("rateMovie2", actors);
+		
+		db.addRating("rateMovie2", 6.6);
+		
+		db.updateRating("rateMovie", 7.7);
+		assertEquals(db.getBestMovie(), "rateMovie");
 	}
 
 }

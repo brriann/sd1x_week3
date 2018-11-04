@@ -105,11 +105,29 @@ public class MovieDatabase {
 	}
 	
 	public String getBestActor() {
-		return "asdf";
+		Collections.sort(actorList);
+		return actorList.get(actorList.size() - 1).getName();
 	}
 	
 	public String getBestMovie() {
-		return "asdf";
+		
+		Collections.sort(movieList);
+		return movieList.get(movieList.size() - 1).getName();
+		
+		// naive - bruteforce method
+		
+		/*Double bestRating = 0.0;
+		String bestMovie = "";
+		
+		for (Movie movie : movieList) {
+			if (movie.getRating() > bestRating) {
+				bestRating = movie.getRating();
+				bestMovie = movie.getName();
+			}
+				
+		}
+		
+		return bestMovie;*/
 	}
 	
 	public static void main(String[] args) {

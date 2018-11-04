@@ -1,7 +1,7 @@
 package MovieDB;
 import java.util.*;
 
-public class Movie {
+public class Movie implements Comparable {
 
 	private String name;
 	public String getName() {
@@ -34,6 +34,12 @@ public class Movie {
 		this.rating = rating;
 	}
 	
+	public int compareTo(Object compare) {
+		Double compareRating = ((Movie)compare).getRating();
+		if (this.rating > compareRating) return 1;
+		else if (this.rating == compareRating) return 0;
+		else return -1;
+	}
 	
 	
 	
