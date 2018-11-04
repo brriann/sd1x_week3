@@ -1,0 +1,5 @@
+movie_name	critic_score
+Meet Joe Black	12
+Catch Me If You Can	16
+Inglourious Basterds	17
+Sleepers	24
