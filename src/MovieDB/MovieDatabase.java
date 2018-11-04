@@ -19,28 +19,68 @@ public class MovieDatabase {
 	}
 	
 	public void addMovie(String name, String[] actors) {
+		
+		// if movie exists do nothing
 		for (Movie movie : movieList) {
 			if (movie.getName().equals(name)) {
 				return;
 			}
 		}
+		
+		// if not, make new movie
+		ArrayList<Actor> empty = new ArrayList<Actor>();
+		Movie movie = new Movie(name, empty, null);
+		
+		// handle actors input array
 		ArrayList<String> newActors = new ArrayList<String>();
 		ArrayList<Actor> existingActors = new ArrayList<Actor>();
+		
 		for (String actor : actors) {
-			int counter = getActorList().size();
-			for (Actor dbActor : getActorList()) {
-				if (dbActor.getName().equals(actor)) {
-					existingActors.add(dbActor);
+			int counter = actorList.size();
+			boolean existing = false;
+			if (counter > 0) {
+				for (Actor dbActor : actorList) {
+					if (dbActor.getName().equals(actor)) {
+						existingActors.add(dbActor);
+						existing = true;
+					}
+					counter--;
+					if (counter == 0 && !existing) {
+						newActors.add(actor);
+					}
 				}
-				counter--;
-				if (counter == 0) {
-					newActors.add(actor);
-				}
+			} else {
+				newActors.add(actor);
 			}
 		}
+		
+		// for existing actors : add them to movie, add movie to them
+		for (Actor existing : existingActors) {
+			
+			existing.getMovies().add(movie);
+			
+			/*ArrayList<Movie> actorMovies = existing.getMovies();
+			actorMovies.add(movie);
+			existing.setMovies(actorMovies);*/
+		}
+		
+		// for new actors : CREATE THEM, add them to movie, add movie to them
+		ArrayList<Movie> thisMovie = new ArrayList<Movie>();
+		thisMovie.add(movie);
+		
+		for (String newActor : newActors) {
+			Actor newActordb = new Actor(newActor, thisMovie);
+			actorList.add(newActordb);
+			movie.getActors().add(newActordb);
+			
+			/*ArrayList<Actor> movieActors2 = movie.getActors();
+			movieActors2.add(newActordb);
+			movie.setActors(movieActors2);*/
+		}
+		movieList.add(movie);
 	}
 	
-	public void addRating(String name, double rating) {
+	public void addRating(String name, Double rating) {
 		Movie movieToRate = null;
 		for (Movie movie : movieList) {
 			if (movie.getName().equals(name)) {
@@ -52,7 +92,7 @@ public class MovieDatabase {
 		}
 	}
 	
-	public void updateRating(String name, double newRating) {
+	public void updateRating(String name, Double newRating) {
 		Movie movieToRate = null;
 		for (Movie movie : movieList) {
 			if (movie.getName().equals(name)) {
@@ -65,14 +105,19 @@ public class MovieDatabase {
 	}
 	
 	public String getBestActor() {
-		
+		return "asdf";
 	}
 	
 	public String getBestMovie() {
-		
+		return "asdf";
 	}
 	
 	public static void main(String[] args) {
+		MovieDatabase db = new MovieDatabase();
+		String[] actors = new String[] {"aa", "bb"};
+		db.addMovie("movie1", actors);
 		
+		db.addRating("movie1", 5.5);
+		db.updateRating("movie1", 6.6);
 	}
 }

@@ -19,16 +19,16 @@ public class Movie {
 		this.actors = actors;
 	}
 	
-	private double rating;
-	public double getRating() {
+	private Double rating;
+	public Double getRating() {
 		return rating;
 	}
-	public void setRating(double rating) {
+	public void setRating(Double rating) {
 		this.rating = rating;
 	}
 	
 	
-	public Movie(String name, ArrayList<Actor> actors, double rating) {
+	public Movie(String name, ArrayList<Actor> actors, Double rating) {
 		this.name = name;
 		this.actors = actors;
 		this.rating = rating;
