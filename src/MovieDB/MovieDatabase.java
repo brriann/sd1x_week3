@@ -1,4 +1,6 @@
 package MovieDB;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class MovieDatabase {
@@ -58,10 +60,6 @@ public class MovieDatabase {
 		for (Actor existing : existingActors) {
 			
 			existing.getMovies().add(movie);
-			
-			/*ArrayList<Movie> actorMovies = existing.getMovies();
-			actorMovies.add(movie);
-			existing.setMovies(actorMovies);*/
 		}
 		
 		// for new actors : CREATE THEM, add them to movie, add movie to them
@@ -72,10 +70,6 @@ public class MovieDatabase {
 			Actor newActordb = new Actor(newActor, thisMovie);
 			actorList.add(newActordb);
 			movie.getActors().add(newActordb);
-			
-			/*ArrayList<Actor> movieActors2 = movie.getActors();
-			movieActors2.add(newActordb);
-			movie.setActors(movieActors2);*/
 		}
 		movieList.add(movie);
 	}
@@ -113,29 +107,97 @@ public class MovieDatabase {
 		
 		Collections.sort(movieList);
 		return movieList.get(movieList.size() - 1).getName();
-		
-		// naive - bruteforce method
-		
-		/*Double bestRating = 0.0;
-		String bestMovie = "";
-		
-		for (Movie movie : movieList) {
-			if (movie.getRating() > bestRating) {
-				bestRating = movie.getRating();
-				bestMovie = movie.getName();
-			}
-				
-		}
-		
-		return bestMovie;*/
 	}
 	
 	public static void main(String[] args) {
-		MovieDatabase db = new MovieDatabase();
-		String[] actors = new String[] {"aa", "bb"};
-		db.addMovie("movie1", actors);
 		
-		db.addRating("movie1", 5.5);
-		db.updateRating("movie1", 6.6);
+		MovieDatabase db = new MovieDatabase();
+		
+		File file = new File("testmovies.txt");
+		try {
+			Scanner input = new Scanner(file);
+			while (input.hasNextLine()) {
+				String line = input.nextLine();
+				List<String> lineList = Arrays.asList(line.split(","));
+				
+				if (lineList.get(0).trim().length() > 0) {
+					Actor lineActor = new Actor(lineList.get(0), new ArrayList<Movie>());
+					
+					ArrayList<String> lineMovies = new ArrayList<String>();
+					
+					for (int i = 1; i < lineList.size(); i++) {
+						String lineMovie = lineList.get(i).trim();
+						lineMovies.add(lineMovie);
+					}
+					
+					ArrayList<String> existingMovies = new ArrayList<String>();
+					ArrayList<String> newMovies = new ArrayList<String>();
+					
+					// break line Movies into new and existing
+					for (String lineMovie : lineMovies) {
+						int counter = db.movieList.size();
+						boolean existing = false;
+						if (counter > 0) {
+							for (Movie movie : db.movieList) {
+								if (movie.getName().equals(lineMovie)) {
+									existing = true;
+									existingMovies.add(lineMovie);
+								}
+								counter--;
+								if (counter == 0 && !existing) {
+									newMovies.add(lineMovie);
+								}
+							}
+						} else {
+							newMovies.add(lineMovie);
+						}
+					}
+					
+					// for existing movies : add Actor to movie, add movie to Actor
+					
+					for (String existing : existingMovies) {
+						for (Movie movie : db.movieList) {
+							if (movie.getName().equals(existing)) {
+								movie.getActors().add(lineActor);
+								lineActor.getMovies().add(movie);
+							}
+						}
+					}
+					
+					// for new movies : add Movie to db, add Actor to movie, add movie to Actor
+					for (String newMovie : newMovies) {
+						Movie newMovieObj = new Movie(newMovie, new ArrayList<Actor>(), null);
+						newMovieObj.getActors().add(lineActor);
+						lineActor.getMovies().add(newMovieObj);
+						db.movieList.add(newMovieObj);
+					}
+					db.actorList.add(lineActor);
+				}
+			}
+			System.out.println("movie import done");
+			input.close();
+			
+		}
+		catch (FileNotFoundException ex) {
+			System.out.println("Movies file not found.");
+		}
+		
+		File file2 = new File("testratings.txt");
+		try {
+			Scanner input = new Scanner(file);
+			while (input.hasNextLine()) {
+				String line = input.nextLine();
+				List<String> lineList = Arrays.asList(line.split("\\s+"));
+				for (int i = 0; i < lineList.size(); i++) {
+					System.out.println(i + " " + lineList.get(i));
+				}
+				
+			}
+			System.out.println("Ratings import done");
+			input.close();
+		}
+		catch (FileNotFoundException ex) {
+			System.out.println("Ratings file not found.");
+		}
 	}
 }
