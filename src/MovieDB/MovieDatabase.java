@@ -113,7 +113,7 @@ public class MovieDatabase {
 		
 		MovieDatabase db = new MovieDatabase();
 		
-		File file = new File("testmovies.txt");
+		File file = new File("movies.txt");
 		try {
 			Scanner input = new Scanner(file);
 			while (input.hasNextLine()) {
@@ -182,19 +182,24 @@ public class MovieDatabase {
 			System.out.println("Movies file not found.");
 		}
 		
-		File file2 = new File("testratings.txt");
+		File file2 = new File("ratings.txt");
 		try {
-			Scanner input = new Scanner(file);
+			Scanner input = new Scanner(file2);
+			input.nextLine();
 			while (input.hasNextLine()) {
 				String line = input.nextLine();
-				List<String> lineList = Arrays.asList(line.split("\\s+"));
-				for (int i = 0; i < lineList.size(); i++) {
-					System.out.println(i + " " + lineList.get(i));
+				List<String> lineList = Arrays.asList(line.split("\\t"));
+				for (Movie movie : db.getMovieList()) {
+					if (movie.getName().equals(lineList.get(0))) {
+						movie.setRating(Double.parseDouble(lineList.get(1)));
+					}
 				}
-				
 			}
 			System.out.println("Ratings import done");
 			input.close();
+			System.out.println(db.getBestActor());
+			System.out.println(db.getBestMovie());
+			
 		}
 		catch (FileNotFoundException ex) {
 			System.out.println("Ratings file not found.");
